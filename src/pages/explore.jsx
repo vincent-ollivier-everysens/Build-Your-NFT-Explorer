@@ -18,9 +18,9 @@ const Explore = () => {
                 <div className='flex flex-col items-center mb-12'>
                     <div className='mb-16 text-white text-center'>
                         <h1 className='text-5xl  font-bold font-body mb-2'>
-                            Alchemy NFT Explorer
+                            Everysens NFT Explorer
                         </h1>
-                        <p>An inspector to find NFTs by owner and contract address </p>
+
                     </div>
                     <div className='flex flex-col items-center justify-center mb-4 w-2/6 gap-y-2 '>
                         <input className="border rounded-sm focus:outline-none py-2 px-3 w-full" value={owner} onChange={(e) => setOwner(e.target.value)} placeholder='Insert your wallet address'></input>
@@ -35,9 +35,9 @@ const Explore = () => {
             <section className='flex flex-wrap justify-center'>
                 {
                     NFTs ? NFTs.map(NFT => {
-                       
+
                         return (
-                           <NftCard image={NFT.media[0].gateway} id={NFT.id.tokenId } title={NFT.title} address={NFT.contract.address} description={NFT.description} attributes={NFT.metadata.attributes} ></NftCard>
+                           <NftCard image={NFT._cleaned.gatewayPngUrl} id={NFT._cleaned.tokenId } title={NFT.title} address={NFT.contract.address} description={NFT._cleaned.metadata.description} emitter={NFT._cleaned.metadata.C02_emitter} attributes={NFT.metadata.attributes} ></NftCard>
                         )
                     }) : <div>No NFTs found</div>
                 }
