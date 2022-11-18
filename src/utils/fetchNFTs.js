@@ -23,12 +23,11 @@ async function clean(n)
     const cid = n.tokenUri.raw.replace("ipfs://","");
     const jsonUrl = "https://nftstorage.link/ipfs/".concat(cid).concat(`/${tokenId}.json`);
     const pngUrl  = "https://nftstorage.link/ipfs/".concat(cid).concat(`/${tokenId}.png`);
-    let   fromJson = {description:'error', C02_emitter:'error'};
+    let   fromJson = null;
 
     let p = getJSON(jsonUrl).then(data => {
         console.log(data);
-        fromJson = {description:data.description, C02_emitter:data.attributes[0].GGE.emitter.name}
-
+        fromJson = data.attributes[0];
     }).catch(error => {
         console.error(error);
     });

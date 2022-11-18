@@ -13,21 +13,20 @@ const Explore = () => {
     return (
         <div>
             <header className=' py-24  mb-12 w-full   alchemy'>
-                <div className='flex-grow flex justify-end mr-12 mb-12'>
-                </div>
-                <div className='flex flex-col items-center mb-12'>
-                    <div className='mb-16 text-white text-center'>
-                        <h1 className='text-5xl  font-bold font-body mb-2'>
+                <div className='flex flex-col items-center '>
+                    <div className='text-white text-center'>
+                        <h1 className='text-4xl  font-bold font-body mb-2'>
                             Everysens NFT Explorer
                         </h1>
-
                     </div>
+                    {/*
                     <div className='flex flex-col items-center justify-center mb-4 w-2/6 gap-y-2 '>
                         <input className="border rounded-sm focus:outline-none py-2 px-3 w-full" value={owner} onChange={(e) => setOwner(e.target.value)} placeholder='Insert your wallet address'></input>
                         <input className="focus:outline-none rounded-sm py-2 px-3 w-full" value={contractAddress} onChange={(e) => setContractAddress(e.target.value)} placeholder='Insert NFT Contract address (optional)'></input>
                     </div>
+                    */}
                     <div className='w-2/6 flex justify-center'>
-                    <button className='py-3 bg-white rounded-sm w-full hover:bg-slate-100' onClick={() => {fetchNFTs(owner, contractAddress, setNFTs    )}}>Search</button>
+                    <button className='py-2 bg-white rounded-sm w-full hover:bg-slate-100' onClick={() => {fetchNFTs(owner, contractAddress, setNFTs    )}}>Refresh</button>
                     </div>
                 </div>
             </header>
@@ -37,7 +36,7 @@ const Explore = () => {
                     NFTs ? NFTs.map(NFT => {
 
                         return (
-                           <NftCard image={NFT._cleaned.gatewayPngUrl} id={NFT._cleaned.tokenId } title={NFT.title} address={NFT.contract.address} description={NFT._cleaned.metadata.description} emitter={NFT._cleaned.metadata.C02_emitter} attributes={NFT.metadata.attributes} ></NftCard>
+                           <NftCard image={NFT._cleaned.gatewayPngUrl} id={NFT._cleaned.tokenId }  emitter={NFT._cleaned.metadata.GGE.emitter.name} metadata={NFT._cleaned.metadata} ></NftCard>
                         )
                     }) : <div>No NFTs found</div>
                 }
