@@ -1,11 +1,37 @@
-// Go to www.alchemy.com and create an account to grab your own api key!
-
 
 import {BigNumber} from "@ethersproject/bignumber";
+const openpgp = require('openpgp');
+const {Base64} = require("js-base64");
 
 const apiKey = "VkuC8BKyXlr9QZAPu3s6tWmH7ua0a0tA";
 const endpoint = `https://eth-goerli.g.alchemy.com/v2/${apiKey}`;
-//const endpoint = `http://localhost:8545`;
+const decryptMasterPassphrase = "39b8bd861f914708dec0fc1311d4dd782391caf261e2eaebbcc3301e5ffc0689"
+
+
+async function decrypt(encryptedStringBase64, passphrase)
+{
+    const encryptedUint8Array = Base64.toUint8Array(encryptedStringBase64);
+    const encryptedMessage = await openpgp.readMessage({ binaryMessage: encryptedUint8Array });
+    const { data: decrypted } = await openpgp.decrypt({
+        message: encryptedMessage,
+        passwords: [passphrase],
+        format: 'text'
+    });
+    return decrypted;
+}
+
+
+async function gpg_decrypt_object(object, passphrase) {
+    let promises = [];
+    Object.keys(object).map((n) => {
+        promises.push(decrypt(object[n], passphrase).then((ec) => {
+            object[n] = ec;
+        }));
+    });
+    return Promise.all(promises).then(() => { return object; });
+}
+
+
 
 
 async function clean(n)
@@ -26,21 +52,26 @@ async function clean(n)
     let   fromJson = null;
 
     let p = getJSON(jsonUrl).then(data => {
-        console.log(data);
-        fromJson = data.attributes[0];
+        fromJson = data;
     }).catch(error => {
         console.error(error);
     });
 
     await Promise.resolve(p);
+    const passphrase = await decrypt(fromJson.passphrase, decryptMasterPassphrase); // encrypt the local passphrase with master passphrase
 
+    let emitter = fromJson.attributes[0].GGE.emitter;
+    emitter = await gpg_decrypt_object(emitter, passphrase);
+
+    //console.log("emitter:");
+    //console.log(emitter);
 
     n._cleaned = {
         tokenId        : tokenId,
         tokenUri       : n.tokenUri.raw,
         gatewayJsonUrl : jsonUrl,
         gatewayPngUrl  : pngUrl,
-        metadata       : fromJson
+        metadata       : fromJson.attributes[0]
     }
 
     return n;
@@ -50,9 +81,9 @@ async function clean(n)
 export const fetchNFTs = async (owner, contractAddress, setNFTs, retryAttempt) => {
 
     owner = '0x3c794EB9E0ADcF7DE31973c5A824b940B6738E81';
-    contractAddress = '0x0B7f1f4aB84601343f3BcBAFD21df888b082922d';
+    contractAddress = '0x2fA22Dd0Eb16A72B7a9499A84C07c3040c183677';
 
-    if (retryAttempt === 5) {
+    if (retryAttempt === 3) {
         return;
     }
     if (owner) {
@@ -68,7 +99,7 @@ export const fetchNFTs = async (owner, contractAddress, setNFTs, retryAttempt) =
         }
 
         //console.log(data);
-        data.ownedNfts = data.ownedNfts.slice(3);
+        //data.ownedNfts = data.ownedNfts.slice(1);
 
         const promises = data.ownedNfts.map(n => clean(n));
         const R = await Promise.all(promises);
