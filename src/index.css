@@ -8,3 +8,29 @@
 .alchemy {
     background: linear-gradient(267.45deg,#05d5ff -34.23%,#53f 99.39%)
 }
+
+ol, ul, menu {
+    list-style: square;
+    margin: 0px 0 8px 18px ;
+    padding: 0px;
+}
+
+.nft-attr {
+    font-size: 12px;
+    font-family: "DejaVu Sans Mono";
+}
+
+.nft-attr-value {
+    font-size: 16px;
+    font-family: "DejaVu Sans Mono";
+}
+
+.nft-attr-value i {
+    font-size: 12px;
+    font-family: "DejaVu Sans Mono";
+}
+
+.nft-attr-date {
+    font-size: 14px;
+    font-family: "DejaVu Sans Mono";
+}

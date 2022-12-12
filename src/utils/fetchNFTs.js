@@ -66,12 +66,20 @@ async function clean(n)
     //console.log("emitter:");
     //console.log(emitter);
 
+    let dates = { from : new Date(fromJson.attributes[0].GGE.CO2.computation.dates.from), to : new Date(fromJson.attributes[0].GGE.CO2.computation.dates.from) };
+    dates.from = dates.from.toDateString();
+    dates.to   = dates.to.toDateString();
+
+    console.log("dates:");
+    console.log(dates);
+
     n._cleaned = {
         tokenId        : tokenId,
         tokenUri       : n.tokenUri.raw,
         gatewayJsonUrl : jsonUrl,
         gatewayPngUrl  : pngUrl,
-        metadata       : fromJson.attributes[0]
+        metadata       : fromJson.attributes[0],
+        dates          : dates
     }
 
     return n;
@@ -91,15 +99,13 @@ export const fetchNFTs = async (owner, contractAddress, setNFTs, retryAttempt) =
         try {
             if (contractAddress) {
                 data = await fetch(`${endpoint}/getNFTs?owner=${owner}&contractAddresses%5B%5D=${contractAddress}`).then(data => data.json())
+                //data = await fetch(`${endpoint}/getNFTs?contractAddresses%5B%5D=${contractAddress}`).then(data => data.json())
             } else {
                 data = await fetch(`${endpoint}/getNFTs?owner=${owner}`).then(data => data.json())
             }
         } catch (e) {
             fetchNFTs(endpoint, owner, contractAddress, setNFTs, retryAttempt+1)
         }
-
-        //console.log(data);
-        //data.ownedNfts = data.ownedNfts.slice(1);
 
         const promises = data.ownedNfts.map(n => clean(n));
         const R = await Promise.all(promises);

@@ -1,4 +1,4 @@
-const NftCard = ({ image, id, emitter, metadata }) => {
+const NftCard = ({ image, id, emitter, metadata, dates }) => {
 
 
     return (
@@ -10,11 +10,14 @@ const NftCard = ({ image, id, emitter, metadata }) => {
                         <h3 className="text-xl">tokenId: {id}</h3>
                     </div>
                 </div>
-                <h1>Emitter: {emitter? emitter.slice(0, 32) : "No Emitter"}</h1>
-                <p>C02: {metadata.GGE.CO2.computation.result.sign}{metadata.GGE.CO2.computation.result.value} {metadata.GGE.CO2.computation.result.unit}</p>
-                <br/>
-                <p>date from : {metadata.GGE.CO2.computation.dates.from}</p>
-                <p>date to : {metadata.GGE.CO2.computation.dates.to}</p>
+                <ul>
+                    <li><span className="nft-attr">Emitter:</span> <span className="nft-attr-value">{emitter? emitter.slice(0, 32) : "No Emitter"}</span></li>
+                    <li><span className="nft-attr">Description:</span> <span className="nft-attr-value">{metadata.GGE.emitter.description.slice(0, 32)}</span></li>
+                    <li><span className="nft-attr">C02:</span><span className="nft-attr-value"> <b>{metadata.GGE.CO2.computation.result.value}</b> <i>({metadata.GGE.CO2.computation.result.unit})</i></span></li>
+                    <li><span className="nft-attr">date from:</span> <span className="nft-attr-date">{dates.from}</span></li>
+                    <li><span className="nft-attr">date to:</span> <span className="nft-attr-date">{dates.to}</span></li>
+                </ul>
+
 
             </div>
 
